@@ -2,9 +2,11 @@ import dash
 import plotly.express as px
 import pandas as pd
 from dash import Dash, html, dcc
-from dash.dependencies import Output, Input  # used in the section callback
+from dash.dependencies import Output, Input  
+# used in the section callback
 
-df = pd.read_csv("movies.csv")  # pandas dataframe
+df = pd.read_csv("movies.csv")  
+# pandas dataframe
 
 
 
@@ -12,8 +14,8 @@ df = pd.read_csv("movies.csv")  # pandas dataframe
 app = dash.Dash(__name__)
 # Html layout
 app.layout = html.Div([
-    #setting up the headings for the page
-    #Division for Bar-Graph
+#setting up the headings for the page
+#Division for Bar-Graph
 	html.Div([
     html.H1("User Data based Graphs in Python", style={
             'color': 'blue', 'fontSize': 40, 'textAlign': 'center'}),
@@ -22,7 +24,7 @@ app.layout = html.Div([
      html.H2("BAR-GRAPHS", style={
             'color': 'red', 'fontSize': 30, 'textAlign': 'center'}),
 
-
+#Creates a dropdown list
     dcc.Dropdown(id='Choice',
                  options=[{'label': x, 'value': x}
                           for x in (df.Genre.unique())],
@@ -31,7 +33,7 @@ app.layout = html.Div([
     dcc.Graph(id='python-graph', figure={}),
    ]),
 
-    #Division for Pie Chart
+#Division for Pie Chart
     html.Div([
         
          html.H2("PIECHART", style={
@@ -45,9 +47,8 @@ app.layout = html.Div([
     ]),
 
 
+#Division for Histogram
     html.Div([
-
-        #Division for Histogram
          html.H2("HISTOGRAM", style={
             'color': 'red', 'fontSize': 30, 'textAlign': 'center'}),
         # dcc.Dropdown(id='Choice3',
@@ -59,15 +60,15 @@ app.layout = html.Div([
     ])])
 
 
-
+# callback decorator
 @app.callback(
     Output(component_id='python-graph', component_property='figure'),
     Input(component_id='Choice', component_property='value'),
-    # Output(component_id='python-graph2', component_property='figure2'),
-    # Input(component_id='Choice2', component_property='value')
-)  # callback decorator
-def interactive_graphing(value_genre):
-    dff = df[df.Genre == value_genre]
+   
+)  
+#callbackfunction
+def interactive(genre_value):
+    dff = df[df.Genre == genre_value]
     fig = px.bar(data_frame=dff, x="Audience score %", y="Worldwide Gross", opacity=0.5,hover_name='Film',
     	color='Year',   # if values in column z = 'some_group' and 'some_other_group'
     color_discrete_map={
@@ -76,23 +77,26 @@ def interactive_graphing(value_genre):
     })
     return fig
     
-
+# callback decorator
 @app.callback(
     Output(component_id='python-graph2', component_property='figure'),
-     Input(component_id='Choice', component_property='value'),
+    Input(component_id='Choice', component_property='value'),
     
-)  # callback decorator
-def interactive_graphing(value_genre):
-    dff = df[df.Genre == value_genre]
+)
+#callback function  
+def interactive(genre_value):
+#Create copy of dataframe where genre matches selected genre
+    dff = df[df.Genre == genre_value]
     fig2 = px.pie(data_frame=dff, names="Film", values="Audience score %")
     return fig2
 
-
+# callback decorator
 @app.callback(
     Output(component_id='python-graph3', component_property='figure'),
     Input(component_id='Choice', component_property='value'),
-)  # callback decorator
-def interactive_graphing(value_genre):
+)  
+
+def interactive(genre_value):
     dff = df[df.Genre == value_genre]
     fig3 = px.histogram(data_frame=dff,x='Audience score %')
    
@@ -109,6 +113,14 @@ def interactive_graphing(value_genre):
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8002)
+
+
+
+
+
+
+
+
 
 
 
